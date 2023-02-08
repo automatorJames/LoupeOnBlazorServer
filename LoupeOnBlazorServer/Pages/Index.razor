@@ -1,0 +1,86 @@
+﻿@page "/"
+@using Gibraltar.Agent;
+
+<PageTitle>Index</PageTitle>
+
+<h2>Loupe logging in Blazor</h2>
+<br />
+<h4>This demo page sends logs to Loupe via the Loupe Log API.</h4> 
+<h6>See documentation here: <a href="https://doc.onloupe.com/Logging_DirectLogging.html">Better Logging with Loupe Log API</a>.</h6>
+<br />
+
+<hr />
+
+<h5>Enter text into the fields below to create a mock log message.</h5>
+(You may alternatively leave the default values unchanged).
+<br />
+<br />
+
+<div class="form-group"></div>
+
+<label style="display:block">App name (optionally period-delimited)</label>
+<input @bind=PeriodDelimitedAppName />
+<br />
+<br />
+
+<label style="display:block">Log Caption</label>
+<input @bind=LogCaption />
+<br />
+<br />
+
+<label style="display:block">Log Message</label>
+<input @bind=LogMessage />
+<br />
+<br />
+
+<hr />
+
+<h5>Click below to log an error at level Debug, Warning, or Error.</h5>
+The log will appear in the app.loupe.com instance associated with the CustomerName value specified in this project's appsettings.json file (Logging.Server.CustomerName).
+<br />
+<br />
+Note!: The Loupe Agent only uploads messages when the log file closes, which occurs upon application exit, or when an Error or Critical Error is logged.
+<br />
+If you're running this demo in a debugger, try logging an Error or Critical Error to see results in Loupe while the debugger is running.
+<br />
+<br />
+
+<button @onclick=LogWarning style="width:300px; border:none; background-color:darkblue; color:white"><b>Log a Warning</b></button>
+<br />
+<br />
+
+<button @onclick=LogError style="width:300px; border:none; background-color:darkgoldenrod; color:white"><b>Log an Error</b></button>
+<br />
+<br />
+
+<button @onclick=LogCritical style="width:300px; border:none; background-color:darkred; color:white"><b>Log a Critical Error</b></button>
+<br />
+<br />
+
+<hr />
+<h4>Messages logged: <b>@MessagesLogged</b></h4>
+
+@code{
+    int MessagesLogged = 0;
+    string PeriodDelimitedAppName { get; set; } = "Example.App.Name";
+    string LogCaption { get; set; } = "This is a test log caption";
+    string LogMessage { get; set; } = "This is a test log message";
+
+    void LogWarning()
+    {
+        Log.Warning(PeriodDelimitedAppName, LogCaption, LogMessage);
+        MessagesLogged++;
+    }
+
+    void LogError()
+    {
+        Log.Error(PeriodDelimitedAppName, LogCaption, LogMessage);
+        MessagesLogged++;
+    }
+
+    void LogCritical()
+    {
+        Log.Critical(PeriodDelimitedAppName, LogCaption, LogMessage);
+        MessagesLogged++;
+    }
+}
